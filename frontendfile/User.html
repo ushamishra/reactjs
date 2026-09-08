@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 500px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px 15px;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>User Details Form</h2>
+
+    <form id="userForm">
+        <label>Name:</label>
+        <input type="text" id="name" required>
+
+        <label>Address:</label>
+        <textarea id="address" required></textarea>
+
+        <label>Phone Number:</label>
+        <input type="tel" id="phNo" required>
+
+        <label>Hobbies (comma separated):</label>
+        <input type="text" id="hobbies" placeholder="Cooking, Gardening">
+
+        <label>Username:</label>
+        <input type="text" id="userName" required>
+
+        <label>Password:</label>
+        <input type="password" id="password" required>
+
+        <button type="submit" onClick="backendCall(event)">Submit</button>
+    </form>
+
+
+    <div id="backendstatus">
+
+
+    </div>
+
+
+    <script>
+
+
+const backendCall = async (event) => {
+    event.preventDefault();
+
+    const payload = {
+        name: document.getElementById("name").value.trim(),
+        address: document.getElementById("address").value.trim(),
+        phNo: document.getElementById("phNo").value.trim(),
+        hobbies: document.getElementById("hobbies").value
+            .split(",") 
+            .map(hobby => hobby.trim())
+            .filter(hobby => hobby.length > 0),
+        userName: document.getElementById("userName").value.trim(),
+        password: document.getElementById("password").value
+    };
+
+    try {
+        const response = await fetch("http://192.168.29.235:8080/registeruser",{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+
+        const result = await response.text();
+
+        console.log("Success:", result);
+
+        document.getElementById("backendstatus").innerHTML = `<pre>${result}</pre>`;
+       
+
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Failed to submit user data.");
+    }
+}
+        // document.getElementById("userForm").addEventListener("submit", backendCall );
+
+
+    </script>
+
+</body>
+</html>
