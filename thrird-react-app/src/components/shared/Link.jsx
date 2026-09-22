@@ -1,0 +1,12 @@
+import React from 'react'
+
+function Link(props) {
+  return (
+    <div className='w-fit bg-blue-500 text-white m-auto border-2 border-red-300 rounded-2xl  p-2 transition duration-500 hover:scale-110 hover:bg-blue-800  '>
+
+        <a  href={props.src} >{props.linkText}</a>
+    </div>
+  )
+}
+
+export default Link
